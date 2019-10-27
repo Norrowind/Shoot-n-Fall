@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="..\..\ShotNFall.uproject" />
+    <Filter Include="Source">
+      <UniqueIdentifier>{76DD66E6-1F2F-4296-B934-BB7283F14B2F}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Source\ShotNFall.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <None Include="..\..\Source\ShotNFallEditor.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <Filter Include="Config">
+      <UniqueIdentifier>{95184E5F-4BA4-4E22-9D68-C83F9E34AC31}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Config\DefaultEditor.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultEditorPerProjectUserSettings.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultEngine.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultGame.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultInput.ini">
+      <Filter>Config</Filter>
+    </None>
+    <Filter Include="Source\ShotNFall">
+      <UniqueIdentifier>{8164C325-A240-4948-BCAD-0645EA5BEC6F}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Source\ShotNFall\ShotNFall.Build.cs">
+      <Filter>Source\ShotNFall</Filter>
+    </None>
+    <ClCompile Include="..\..\Source\ShotNFall\ShotNFall.cpp">
+      <Filter>Source\ShotNFall</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\ShotNFall\ShotNFall.h">
+      <Filter>Source\ShotNFall</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\ShotNFall\ShotNFallCharacter.cpp">
+      <Filter>Source\ShotNFall</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\ShotNFall\ShotNFallCharacter.h">
+      <Filter>Source\ShotNFall</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\ShotNFall\ShotNFallGameMode.cpp">
+      <Filter>Source\ShotNFall</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\ShotNFall\ShotNFallGameMode.h">
+      <Filter>Source\ShotNFall</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
