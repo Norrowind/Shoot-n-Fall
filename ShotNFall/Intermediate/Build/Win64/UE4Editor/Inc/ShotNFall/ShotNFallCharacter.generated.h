@@ -13,9 +13,29 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 #endif
 #define SHOTNFALL_ShotNFallCharacter_generated_h
 
-#define ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_12_RPC_WRAPPERS
-#define ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_12_RPC_WRAPPERS_NO_PURE_DECLS
-#define ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_12_INCLASS_NO_PURE_DECLS \
+#define ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_14_RPC_WRAPPERS \
+ \
+	DECLARE_FUNCTION(execIsFiring) \
+	{ \
+		P_FINISH; \
+		P_NATIVE_BEGIN; \
+		*(bool*)Z_Param__Result=P_THIS->IsFiring(); \
+		P_NATIVE_END; \
+	}
+
+
+#define ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_14_RPC_WRAPPERS_NO_PURE_DECLS \
+ \
+	DECLARE_FUNCTION(execIsFiring) \
+	{ \
+		P_FINISH; \
+		P_NATIVE_BEGIN; \
+		*(bool*)Z_Param__Result=P_THIS->IsFiring(); \
+		P_NATIVE_END; \
+	}
+
+
+#define ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_14_INCLASS_NO_PURE_DECLS \
 private: \
 	static void StaticRegisterNativesAShotNFallCharacter(); \
 	friend struct Z_Construct_UClass_AShotNFallCharacter_Statics; \
@@ -24,7 +44,7 @@ public: \
 	DECLARE_SERIALIZER(AShotNFallCharacter)
 
 
-#define ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_12_INCLASS \
+#define ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_14_INCLASS \
 private: \
 	static void StaticRegisterNativesAShotNFallCharacter(); \
 	friend struct Z_Construct_UClass_AShotNFallCharacter_Statics; \
@@ -33,7 +53,7 @@ public: \
 	DECLARE_SERIALIZER(AShotNFallCharacter)
 
 
-#define ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_12_STANDARD_CONSTRUCTORS \
+#define ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_14_STANDARD_CONSTRUCTORS \
 	/** Standard constructor, called after all reflected properties have been initialized */ \
 	NO_API AShotNFallCharacter(const FObjectInitializer& ObjectInitializer); \
 	DEFINE_DEFAULT_OBJECT_INITIALIZER_CONSTRUCTOR_CALL(AShotNFallCharacter) \
@@ -46,7 +66,7 @@ private: \
 public:
 
 
-#define ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_12_ENHANCED_CONSTRUCTORS \
+#define ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_14_ENHANCED_CONSTRUCTORS \
 private: \
 	/** Private move- and copy-constructors, should never be used */ \
 	NO_API AShotNFallCharacter(AShotNFallCharacter&&); \
@@ -57,30 +77,32 @@ DEFINE_VTABLE_PTR_HELPER_CTOR_CALLER(AShotNFallCharacter); \
 	DEFINE_DEFAULT_CONSTRUCTOR_CALL(AShotNFallCharacter)
 
 
-#define ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_12_PRIVATE_PROPERTY_OFFSET \
+#define ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_14_PRIVATE_PROPERTY_OFFSET \
 	FORCEINLINE static uint32 __PPO__SideViewCameraComponent() { return STRUCT_OFFSET(AShotNFallCharacter, SideViewCameraComponent); } \
-	FORCEINLINE static uint32 __PPO__CameraBoom() { return STRUCT_OFFSET(AShotNFallCharacter, CameraBoom); }
+	FORCEINLINE static uint32 __PPO__CameraBoom() { return STRUCT_OFFSET(AShotNFallCharacter, CameraBoom); } \
+	FORCEINLINE static uint32 __PPO__StarterWeaponClass() { return STRUCT_OFFSET(AShotNFallCharacter, StarterWeaponClass); } \
+	FORCEINLINE static uint32 __PPO__StarterWeaponSocketName() { return STRUCT_OFFSET(AShotNFallCharacter, StarterWeaponSocketName); }
 
 
-#define ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_9_PROLOG
-#define ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_12_GENERATED_BODY_LEGACY \
+#define ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_11_PROLOG
+#define ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_14_GENERATED_BODY_LEGACY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_12_PRIVATE_PROPERTY_OFFSET \
-	ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_12_RPC_WRAPPERS \
-	ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_12_INCLASS \
-	ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_12_STANDARD_CONSTRUCTORS \
+	ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_14_PRIVATE_PROPERTY_OFFSET \
+	ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_14_RPC_WRAPPERS \
+	ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_14_INCLASS \
+	ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_14_STANDARD_CONSTRUCTORS \
 public: \
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
 
 
-#define ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_12_GENERATED_BODY \
+#define ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_14_GENERATED_BODY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_12_PRIVATE_PROPERTY_OFFSET \
-	ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_12_RPC_WRAPPERS_NO_PURE_DECLS \
-	ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_12_INCLASS_NO_PURE_DECLS \
-	ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_12_ENHANCED_CONSTRUCTORS \
+	ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_14_PRIVATE_PROPERTY_OFFSET \
+	ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_14_RPC_WRAPPERS_NO_PURE_DECLS \
+	ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_14_INCLASS_NO_PURE_DECLS \
+	ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_14_ENHANCED_CONSTRUCTORS \
 private: \
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
 

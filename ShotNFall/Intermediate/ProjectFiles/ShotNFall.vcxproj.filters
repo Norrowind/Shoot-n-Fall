@@ -54,4 +54,22 @@
       <Filter>Source\ShotNFall</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source\ShotNFall\Public">
+      <UniqueIdentifier>{ca38fe3c-14d9-4d8d-b86d-0af9a3f4b239}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\ShotNFall\Private">
+      <UniqueIdentifier>{1a85990c-ae0f-439b-9086-0907bf74f261}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Source\ShotNFall\Public\SNFBasicWeapon.h">
+      <Filter>Source\ShotNFall\Public</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Source\ShotNFall\Private\SNFBasicWeapon.cpp">
+      <Filter>Source\ShotNFall\Private</Filter>
+    </ClCompile>
+  </ItemGroup>
 </Project>

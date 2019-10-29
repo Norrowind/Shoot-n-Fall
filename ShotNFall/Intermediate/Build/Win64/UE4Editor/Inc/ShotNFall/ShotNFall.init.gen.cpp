@@ -19,8 +19,8 @@ void EmptyLinkFunctionForGeneratedCodeShotNFall_init() {}
 			static const UE4CodeGen_Private::FPackageParams PackageParams = {
 				"/Script/ShotNFall",
 				PKG_CompiledIn | 0x00000000,
-				0x099401AF,
-				0x50457B62,
+				0x992ED902,
+				0xB3E44BB2,
 				nullptr, 0,
 				METADATA_PARAMS(nullptr, 0)
 			};

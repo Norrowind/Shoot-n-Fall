@@ -6,6 +6,8 @@
 #include "Components/InputComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Public/SNFBasicWeapon.h"
+#include "Components/SkeletalMeshComponent.h"
 
 AShotNFallCharacter::AShotNFallCharacter()
 {
@@ -31,6 +33,7 @@ AShotNFallCharacter::AShotNFallCharacter()
 	SideViewCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	SideViewCameraComponent->bUsePawnControlRotation = false; // We don't want the controller rotating the camera
 
+
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Face in the direction we are moving..
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 720.0f, 0.0f); // ...at this rotation rate
@@ -47,6 +50,11 @@ AShotNFallCharacter::AShotNFallCharacter()
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 }
 
+bool AShotNFallCharacter::IsFiring()
+{
+	return bFiring;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Input
 
@@ -58,6 +66,22 @@ void AShotNFallCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 	PlayerInputComponent->BindAxis("MoveRight", this, &AShotNFallCharacter::MoveRight);
 	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &AShotNFallCharacter::StartCrouch);
 	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &AShotNFallCharacter::StopCrouch);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AShotNFallCharacter::StartWeaponFire);
+	PlayerInputComponent->BindAction("Fire", IE_Released, this, &AShotNFallCharacter::StopWeaponFire);
+}
+
+void AShotNFallCharacter::BeginPlay()
+{
+	/*Spawn basic weapon and attach it to character*/
+
+	Super::BeginPlay();
+
+	FVector WeaponLocation = GetMesh()->GetSocketLocation(StarterWeaponSocketName);
+	FRotator WeaponRotation = GetMesh()->GetSocketRotation(StarterWeaponSocketName);
+	FActorSpawnParameters WeaponSpawnParams;
+	WeaponSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	CurrentWeapon = GetWorld()->SpawnActor<ASNFBasicWeapon>(StarterWeaponClass, WeaponLocation, WeaponRotation, WeaponSpawnParams);
+	CurrentWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, StarterWeaponSocketName);
 }
 
 void AShotNFallCharacter::MoveRight(float Value)
@@ -75,4 +99,20 @@ void AShotNFallCharacter::StartCrouch()
 void AShotNFallCharacter::StopCrouch()
 {
 	UnCrouch();
+}
+
+void AShotNFallCharacter::StopWeaponFire()
+{
+	if (bFiring)
+	{
+		bFiring = false;
+	}
+}
+
+void AShotNFallCharacter::StartWeaponFire()
+{
+	if (!bFiring)
+	{
+		bFiring = true;
+	}
 }

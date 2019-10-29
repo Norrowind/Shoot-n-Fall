@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "ShotNFallCharacter.generated.h"
 
+class ASNFBasicWeapon;
+
 UCLASS(config=Game)
 class AShotNFallCharacter : public ACharacter
 {
@@ -21,12 +23,28 @@ class AShotNFallCharacter : public ACharacter
 
 protected:
 
+	/** Class of weapon which spawns at the start of the game */
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	TSubclassOf<ASNFBasicWeapon>StarterWeaponClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	FName StarterWeaponSocketName;
+
+	virtual void BeginPlay() override;
+
 	/** Called for side to side input */
 	void MoveRight(float Val);
 
 	void StartCrouch();
 
 	void StopCrouch();
+
+	void StartWeaponFire();
+
+	void StopWeaponFire();
+
+	/*To track current weapon which character handle*/
+	ASNFBasicWeapon* CurrentWeapon;
 
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
@@ -40,5 +58,12 @@ public:
 	FORCEINLINE class UCameraComponent* GetSideViewCameraComponent() const { return SideViewCameraComponent; }
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+
+	UFUNCTION(BlueprintPure, Category = "Weapon")
+	bool IsFiring();
+
+private:
+
+	bool bFiring;
 
 };
