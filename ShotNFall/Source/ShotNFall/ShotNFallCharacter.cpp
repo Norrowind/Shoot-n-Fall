@@ -22,7 +22,7 @@ AShotNFallCharacter::AShotNFallCharacter()
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->bAbsoluteRotation = true; // Rotation of the character should not affect rotation of boom
 	CameraBoom->bDoCollisionTest = false;
-	CameraBoom->TargetArmLength = 500.f;
+	CameraBoom->TargetArmLength = 700.f;
 	CameraBoom->SocketOffset = FVector(0.f,0.f,75.f);
 	CameraBoom->RelativeRotation = FRotator(0.f,180.f,0.f);
 
@@ -40,6 +40,8 @@ AShotNFallCharacter::AShotNFallCharacter()
 	GetCharacterMovement()->GroundFriction = 3.f;
 	GetCharacterMovement()->MaxWalkSpeed = 600.f;
 	GetCharacterMovement()->MaxFlySpeed = 600.f;
+	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
+
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
@@ -54,25 +56,23 @@ void AShotNFallCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AShotNFallCharacter::MoveRight);
-
-	PlayerInputComponent->BindTouch(IE_Pressed, this, &AShotNFallCharacter::TouchStarted);
-	PlayerInputComponent->BindTouch(IE_Released, this, &AShotNFallCharacter::TouchStopped);
+	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &AShotNFallCharacter::StartCrouch);
+	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &AShotNFallCharacter::StopCrouch);
 }
 
 void AShotNFallCharacter::MoveRight(float Value)
 {
 	// add movement in that direction
 	AddMovementInput(FVector(0.f,-1.f,0.f), Value);
+
 }
 
-void AShotNFallCharacter::TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location)
+void AShotNFallCharacter::StartCrouch()
 {
-	// jump on any touch
-	Jump();
+	Crouch();
 }
 
-void AShotNFallCharacter::TouchStopped(const ETouchIndex::Type FingerIndex, const FVector Location)
+void AShotNFallCharacter::StopCrouch()
 {
-	StopJumping();
+	UnCrouch();
 }
-

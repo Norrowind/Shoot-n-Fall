@@ -24,11 +24,9 @@ protected:
 	/** Called for side to side input */
 	void MoveRight(float Val);
 
-	/** Handle touch inputs. */
-	void TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location);
+	void StartCrouch();
 
-	/** Handle touch stop event. */
-	void TouchStopped(const ETouchIndex::Type FingerIndex, const FVector Location);
+	void StopCrouch();
 
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
@@ -42,4 +40,5 @@ public:
 	FORCEINLINE class UCameraComponent* GetSideViewCameraComponent() const { return SideViewCameraComponent; }
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+
 };
