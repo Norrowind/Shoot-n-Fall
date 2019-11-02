@@ -8,6 +8,13 @@
 
 class ASNFBasicWeapon;
 
+UENUM()
+enum ECharacterState : uint8
+{
+	Idle,
+	Running
+};
+
 UCLASS(config=Game)
 class AShotNFallCharacter : public ACharacter
 {
@@ -46,6 +53,9 @@ protected:
 	/*To track current weapon which character handle*/
 	ASNFBasicWeapon* CurrentWeapon;
 
+	/*State of character to set right socket position of gun*/
+	ECharacterState CharacterState;
+
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 	// End of APawn interface
@@ -59,11 +69,6 @@ public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
-	UFUNCTION(BlueprintPure, Category = "Weapon")
-	bool IsFiring();
-
 private:
-
-	bool bFiring;
 
 };

@@ -3,6 +3,7 @@
 #include "Public/SNFBasicWeapon.h"
 #include "Components/SkeletalMeshComponent.h"
 
+
 // Sets default values
 ASNFBasicWeapon::ASNFBasicWeapon()
 {
@@ -19,6 +20,15 @@ void ASNFBasicWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void ASNFBasicWeapon::Fire()
+{
+	if (MeshComp && FireAnimation)
+	{
+		MeshComp->PlayAnimation(FireAnimation, false);
+	}
+
 }
 
 // Called every frame

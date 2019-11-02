@@ -13,28 +13,8 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 #endif
 #define SHOTNFALL_ShotNFallCharacter_generated_h
 
-#define ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_14_RPC_WRAPPERS \
- \
-	DECLARE_FUNCTION(execIsFiring) \
-	{ \
-		P_FINISH; \
-		P_NATIVE_BEGIN; \
-		*(bool*)Z_Param__Result=P_THIS->IsFiring(); \
-		P_NATIVE_END; \
-	}
-
-
-#define ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_14_RPC_WRAPPERS_NO_PURE_DECLS \
- \
-	DECLARE_FUNCTION(execIsFiring) \
-	{ \
-		P_FINISH; \
-		P_NATIVE_BEGIN; \
-		*(bool*)Z_Param__Result=P_THIS->IsFiring(); \
-		P_NATIVE_END; \
-	}
-
-
+#define ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_14_RPC_WRAPPERS
+#define ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_14_RPC_WRAPPERS_NO_PURE_DECLS
 #define ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_14_INCLASS_NO_PURE_DECLS \
 private: \
 	static void StaticRegisterNativesAShotNFallCharacter(); \

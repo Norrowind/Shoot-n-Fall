@@ -24,9 +24,14 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
 	USkeletalMeshComponent* MeshComp;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	UAnimSequence* FireAnimation;
+
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	virtual void Fire();
 
 };
