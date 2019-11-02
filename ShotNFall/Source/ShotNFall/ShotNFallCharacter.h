@@ -8,13 +8,6 @@
 
 class ASNFBasicWeapon;
 
-UENUM()
-enum ECharacterState : uint8
-{
-	Idle,
-	Running
-};
-
 UCLASS(config=Game)
 class AShotNFallCharacter : public ACharacter
 {
@@ -50,11 +43,11 @@ protected:
 
 	void StopWeaponFire();
 
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
 	/*To track current weapon which character handle*/
 	ASNFBasicWeapon* CurrentWeapon;
-
-	/*State of character to set right socket position of gun*/
-	ECharacterState CharacterState;
 
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;

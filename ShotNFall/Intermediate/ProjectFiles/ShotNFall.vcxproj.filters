@@ -66,9 +66,15 @@
     <ClInclude Include="..\..\Source\ShotNFall\Public\SNFBasicWeapon.h">
       <Filter>Source\ShotNFall\Public</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\ShotNFall\Public\SNFBasicProjectile.h">
+      <Filter>Source\ShotNFall\Public</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\ShotNFall\Private\SNFBasicWeapon.cpp">
+      <Filter>Source\ShotNFall\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\ShotNFall\Private\SNFBasicProjectile.cpp">
       <Filter>Source\ShotNFall\Private</Filter>
     </ClCompile>
   </ItemGroup>

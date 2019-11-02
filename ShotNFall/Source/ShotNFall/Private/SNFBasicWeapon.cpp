@@ -2,13 +2,14 @@
 
 #include "Public/SNFBasicWeapon.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Public/SNFBasicProjectile.h"
 
 
 // Sets default values
 ASNFBasicWeapon::ASNFBasicWeapon()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	MeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MeshComponent"));
 	MeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	RootComponent = MeshComp;
@@ -24,11 +25,23 @@ void ASNFBasicWeapon::BeginPlay()
 
 void ASNFBasicWeapon::Fire()
 {
-	if (MeshComp && FireAnimation)
+	if (MeshComp)
 	{
-		MeshComp->PlayAnimation(FireAnimation, false);
-	}
+		FVector MuzzleLocation = MeshComp->GetSocketLocation(MuzzleSocketName);
+		FActorSpawnParameters ProjectileSpawnParams;
+		ProjectileSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		ASNFBasicProjectile* Projectile = GetWorld()->SpawnActor<ASNFBasicProjectile>(ProjectileClass, MuzzleLocation, FRotator::ZeroRotator, ProjectileSpawnParams);
+		if (Projectile)
+		{
+			Projectile->SetIgnoredActor(GetOwner());
+			Projectile->LaucnchProjectile(FirePower, GetActorRightVector());
+		}
 
+		if (FireAnimation)
+		{
+			MeshComp->PlayAnimation(FireAnimation, false);
+		}
+	}
 }
 
 // Called every frame

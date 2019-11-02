@@ -7,6 +7,7 @@
 #include "SNFBasicWeapon.generated.h"
 
 class USkeletalMeshComponent;
+class ASNFBasicProjectile;
 
 UCLASS()
 class SHOTNFALL_API ASNFBasicWeapon : public AActor
@@ -27,6 +28,14 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	UAnimSequence* FireAnimation;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	TSubclassOf<ASNFBasicProjectile>ProjectileClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	FName MuzzleSocketName;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	float FirePower;
 
 public:	
 	// Called every frame

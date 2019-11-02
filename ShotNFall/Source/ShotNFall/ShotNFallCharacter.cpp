@@ -36,7 +36,7 @@ AShotNFallCharacter::AShotNFallCharacter()
 
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Face in the direction we are moving..
-	GetCharacterMovement()->RotationRate = FRotator(0.0f, 720.0f, 0.0f); // ...at this rotation rate
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 960.0f, 0.0f); // ...at this rotation rate
 	GetCharacterMovement()->GravityScale = 2.f;
 	GetCharacterMovement()->AirControl = 0.80f;
 	GetCharacterMovement()->JumpZVelocity = 1000.f;
@@ -44,8 +44,6 @@ AShotNFallCharacter::AShotNFallCharacter()
 	GetCharacterMovement()->MaxWalkSpeed = 600.f;
 	GetCharacterMovement()->MaxFlySpeed = 600.f;
 	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
-
-	CharacterState = ECharacterState::Idle;
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
@@ -68,14 +66,17 @@ void AShotNFallCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 
 void AShotNFallCharacter::BeginPlay()
 {
-	/*Spawn basic weapon and attach it to character*/
 
 	Super::BeginPlay();
 
+	GetCapsuleComponent()->OnComponentHit.AddDynamic(this, &AShotNFallCharacter::OnHit);
+
+	//Spawn weapon and attach it to character
 	FVector WeaponLocation = GetMesh()->GetSocketLocation(StarterWeaponSocketName);
 	FRotator WeaponRotation = GetMesh()->GetSocketRotation(StarterWeaponSocketName);
 	FActorSpawnParameters WeaponSpawnParams;
 	WeaponSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	WeaponSpawnParams.Owner = this;
 	CurrentWeapon = GetWorld()->SpawnActor<ASNFBasicWeapon>(StarterWeaponClass, WeaponLocation, WeaponRotation, WeaponSpawnParams);
 	CurrentWeapon->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, StarterWeaponSocketName);
 }
@@ -100,6 +101,14 @@ void AShotNFallCharacter::StopCrouch()
 void AShotNFallCharacter::StopWeaponFire()
 {
 	
+}
+
+void AShotNFallCharacter::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, FVector NormalImpulse, const FHitResult & Hit)
+{
+	if (Cast<AShotNFallCharacter>(OtherActor))
+	{
+		GetMovementComponent()->StopMovementImmediately();
+	}
 }
 
 void AShotNFallCharacter::StartWeaponFire()

@@ -508,8 +508,10 @@
     <None Include="..\..\Config\DefaultGame.ini" />
     <None Include="..\..\Config\DefaultInput.ini" />
     <None Include="..\..\Source\ShotNFall\ShotNFall.Build.cs" />
+    <ClCompile Include="..\..\Source\ShotNFall\Private\SNFBasicProjectile.cpp" />
     <ClCompile Include="..\..\Source\ShotNFall\Private\SNFBasicWeapon.cpp" />
     <ClCompile Include="..\..\Source\ShotNFall\ShotNFall.cpp" />
+    <ClInclude Include="..\..\Source\ShotNFall\Public\SNFBasicProjectile.h" />
     <ClInclude Include="..\..\Source\ShotNFall\Public\SNFBasicWeapon.h" />
     <ClInclude Include="..\..\Source\ShotNFall\ShotNFall.h" />
     <ClCompile Include="..\..\Source\ShotNFall\ShotNFallCharacter.cpp" />
