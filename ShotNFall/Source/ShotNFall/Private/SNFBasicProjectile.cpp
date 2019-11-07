@@ -21,7 +21,7 @@ ASNFBasicProjectile::ASNFBasicProjectile()
 	MeshComp->SetNotifyRigidBodyCollision(true);
 
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projetile Movement"));
-
+	ProjectileMovement->bRotationFollowsVelocity = true;
 }
 
 // Called when the game starts or when spawned
@@ -34,7 +34,7 @@ void ASNFBasicProjectile::BeginPlay()
 //Push enemy 
 void ASNFBasicProjectile::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, FVector NormalImpulse, const FHitResult & Hit)
 {
-	float PushForceApplied = GetActorRightVector().Y * (- PushForce);
+	float PushForceApplied = GetActorForwardVector().Y *  PushForce;
 	ACharacter* PushedCharacter = Cast<ACharacter>(OtherActor);
 	if (PushedCharacter)
 	{

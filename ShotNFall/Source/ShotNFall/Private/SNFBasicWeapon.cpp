@@ -3,6 +3,7 @@
 #include "Public/SNFBasicWeapon.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Public/SNFBasicProjectile.h"
+#include "TimerManager.h"
 
 
 // Sets default values
@@ -14,6 +15,9 @@ ASNFBasicWeapon::ASNFBasicWeapon()
 	MeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	RootComponent = MeshComp;
 
+	FirePower = 3500.f;
+	RateOfFire = 600.f;
+
 }
 
 // Called when the game starts or when spawned
@@ -21,6 +25,7 @@ void ASNFBasicWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	TimeBeetweenShots = 60 / RateOfFire;
 }
 
 void ASNFBasicWeapon::Fire()
@@ -30,6 +35,7 @@ void ASNFBasicWeapon::Fire()
 		FVector MuzzleLocation = MeshComp->GetSocketLocation(MuzzleSocketName);
 		FActorSpawnParameters ProjectileSpawnParams;
 		ProjectileSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
 		ASNFBasicProjectile* Projectile = GetWorld()->SpawnActor<ASNFBasicProjectile>(ProjectileClass, MuzzleLocation, FRotator::ZeroRotator, ProjectileSpawnParams);
 		if (Projectile)
 		{
@@ -41,6 +47,7 @@ void ASNFBasicWeapon::Fire()
 		{
 			MeshComp->PlayAnimation(FireAnimation, false);
 		}
+		LastFireTime = GetWorld()->TimeSeconds;
 	}
 }
 
@@ -49,5 +56,16 @@ void ASNFBasicWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ASNFBasicWeapon::StartFire()
+{
+	float FirstDelay = FMath::Max(LastFireTime + TimeBeetweenShots - GetWorld()->TimeSeconds, 0.f);
+	GetWorldTimerManager().SetTimer(TimerHandle_TimeBeetweenShots, this, &ASNFBasicWeapon::Fire, TimeBeetweenShots, true, FirstDelay);
+}
+
+void ASNFBasicWeapon::StopFire()
+{
+	GetWorldTimerManager().ClearTimer(TimerHandle_TimeBeetweenShots);
 }
 

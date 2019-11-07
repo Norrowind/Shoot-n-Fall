@@ -98,9 +98,20 @@ void AShotNFallCharacter::StopCrouch()
 	UnCrouch();
 }
 
+void AShotNFallCharacter::StartWeaponFire()
+{
+	if (CurrentWeapon)
+	{
+		CurrentWeapon->StartFire();
+	}
+}
+
 void AShotNFallCharacter::StopWeaponFire()
 {
-	
+	if (CurrentWeapon)
+	{
+		CurrentWeapon->StopFire();
+	}
 }
 
 void AShotNFallCharacter::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, FVector NormalImpulse, const FHitResult & Hit)
@@ -111,10 +122,4 @@ void AShotNFallCharacter::OnHit(UPrimitiveComponent * HitComponent, AActor * Oth
 	}
 }
 
-void AShotNFallCharacter::StartWeaponFire()
-{
-	if (CurrentWeapon)
-	{
-		CurrentWeapon->Fire();
-	}
-}
+
