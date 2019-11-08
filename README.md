@@ -6,7 +6,7 @@
 
 ## Main goal is to push-off enemy from the platform to "abyss" using weapons. Game level is the set of platforms in the air. Platforms are generated randomly( position and size).
 
-### States of game:
+### State of game:
 - Ready:
   - Basic movement and animations
   - Shooting system with ability to make automatic weapon(can set rate of fire)
