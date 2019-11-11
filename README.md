@@ -1,4 +1,5 @@
-# Side-scroller shooter game on UE4 with C++ and some Blueprints(properties settings).
+# Side-scroller shooter game for participating in [Game Off 2019 Game Jam](https://itch.io/jam/game-off-2019) . The game is being created on UE4 with C++ and some Blueprints(properties settings).
+### *As repository has been created 27 october, my personal submission deadline, to take part in Game Jam, is 27 november. [This condition allowed by Lee Reilly(Jam Host)](https://itch.io/post/1038550)*
 
 # [Video with current state of game](https://drive.google.com/file/d/1frUIURwaEy13ws4otfLFwBIXVvKnus4X/view?usp=drivesdk)
 *Video will be updated as soon as new feature will be realized.*
