@@ -5,6 +5,11 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "GameFramework/Character.h"
 #include "ShotNFall.h"
+#include "Perception/AIPerceptionSystem.h"
+#include "Perception/AISenseConfig_Sight.h"
+#include "TimerManager.h"
+#include "Engine/TriggerBox.h"
+
 
 // Sets default values
 ASNFBasicProjectile::ASNFBasicProjectile()
@@ -29,6 +34,9 @@ void ASNFBasicProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 
+	MeshComp->OnComponentEndOverlap.AddDynamic(this, &ASNFBasicProjectile::OnOverlapEnd);
+
+	UAIPerceptionSystem::RegisterPerceptionStimuliSource(this, UAISense_Sight::StaticClass(), this);
 }
 
 //Push enemy 
@@ -44,6 +52,15 @@ void ASNFBasicProjectile::OnHit(UPrimitiveComponent * HitComponent, AActor * Oth
 	Destroy();
 }
 
+void ASNFBasicProjectile::OnOverlapEnd(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
+{
+	ATriggerBox* Bounds = Cast<ATriggerBox>(OtherActor);
+	if (Bounds)
+	{
+		Destroy();
+	}
+}
+
 // Called every frame
 void ASNFBasicProjectile::Tick(float DeltaTime)
 {
@@ -54,12 +71,13 @@ void ASNFBasicProjectile::Tick(float DeltaTime)
 void ASNFBasicProjectile::LaucnchProjectile(float Speed, FVector LaunchDirection)
 {
 	ProjectileMovement->SetVelocityInLocalSpace(LaunchDirection * Speed);
+	
 }
 
 //Set actor which is ignored by projectile(prevents self-shooting while moving and shot team mates)
 void ASNFBasicProjectile::SetIgnoredActor(AActor * IgnoredActor)
 {
-	UE_LOG(LogTemp, Warning, TEXT("IgnoredActor: %s"), *IgnoredActor->GetName())
+
 	MeshComp->IgnoreActorWhenMoving(IgnoredActor, true);
 }
 

@@ -35,12 +35,13 @@ void ASNFBasicWeapon::Fire()
 		FVector MuzzleLocation = MeshComp->GetSocketLocation(MuzzleSocketName);
 		FActorSpawnParameters ProjectileSpawnParams;
 		ProjectileSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
+		ProjectileSpawnParams.Owner = GetOwner();
 		ASNFBasicProjectile* Projectile = GetWorld()->SpawnActor<ASNFBasicProjectile>(ProjectileClass, MuzzleLocation, FRotator::ZeroRotator, ProjectileSpawnParams);
 		if (Projectile)
 		{
 			Projectile->SetIgnoredActor(GetOwner());
-			Projectile->LaucnchProjectile(FirePower, GetActorRightVector());
+			FVector LaunchDirection = FVector(0.f, GetActorRightVector().Y, 0.f);
+			Projectile->LaucnchProjectile(FirePower, LaunchDirection);
 		}
 
 		if (FireAnimation)
@@ -66,6 +67,9 @@ void ASNFBasicWeapon::StartFire()
 
 void ASNFBasicWeapon::StopFire()
 {
-	GetWorldTimerManager().ClearTimer(TimerHandle_TimeBeetweenShots);
+	if (TimerHandle_TimeBeetweenShots.IsValid())
+	{
+		GetWorldTimerManager().ClearTimer(TimerHandle_TimeBeetweenShots);
+	}
 }
 

@@ -8,6 +8,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Public/SNFBasicWeapon.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Engine/TriggerBox.h"
+#include "ShotNFallGameMode.h"
 
 AShotNFallCharacter::AShotNFallCharacter()
 {
@@ -32,6 +34,14 @@ AShotNFallCharacter::AShotNFallCharacter()
 	SideViewCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("SideViewCamera"));
 	SideViewCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	SideViewCameraComponent->bUsePawnControlRotation = false; // We don't want the controller rotating the camera
+
+	AINavigationUpCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("AINavigationUp"));
+	AINavigationUpCapsule->InitCapsuleSize(243.f, 533.f);
+	AINavigationUpCapsule->SetupAttachment(RootComponent);
+
+	AINavigationDownCapsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("AINavigationDown"));
+	AINavigationDownCapsule->InitCapsuleSize(225.f, 255.f);
+	AINavigationDownCapsule->SetupAttachment(RootComponent);
 
 
 	// Configure character movement
@@ -70,6 +80,7 @@ void AShotNFallCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	GetCapsuleComponent()->OnComponentHit.AddDynamic(this, &AShotNFallCharacter::OnHit);
+	GetCapsuleComponent()->OnComponentEndOverlap.AddDynamic(this, &AShotNFallCharacter::OnOverlapEnd);
 
 	//Spawn weapon and attach it to character
 	FVector WeaponLocation = GetMesh()->GetSocketLocation(StarterWeaponSocketName);
@@ -83,6 +94,15 @@ void AShotNFallCharacter::BeginPlay()
 
 void AShotNFallCharacter::MoveRight(float Value)
 {
+	if (Value > 0.f)
+	{
+		SetActorRotation(FRotator(0.f, -90.f, 0.f));
+	}
+	else if (Value < 0.f)
+	{
+		SetActorRotation(FRotator(0.f, 90.f, 0.f));
+	}
+
 	// add movement in that direction
 	AddMovementInput(FVector(0.f,-1.f,0.f), Value);
 
@@ -116,10 +136,17 @@ void AShotNFallCharacter::StopWeaponFire()
 
 void AShotNFallCharacter::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, FVector NormalImpulse, const FHitResult & Hit)
 {
-	if (Cast<AShotNFallCharacter>(OtherActor))
+
+}
+
+void AShotNFallCharacter::OnOverlapEnd(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
+{
+	ATriggerBox* Bounds = Cast<ATriggerBox>(OtherActor);
+	if (Bounds)
 	{
-		GetMovementComponent()->StopMovementImmediately();
+		OnFallen.Broadcast(this);
 	}
 }
+
 
 

@@ -29,15 +29,15 @@ ASNF_PlatformBuilder::ASNF_PlatformBuilder()
 void ASNF_PlatformBuilder::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	BuildPlatforms();
-	
+		
 }
 
 //Spawns paltforms randomly from each side of base platform, base platform is a root component of this actor
 //Platform spawning logic based on arrows components from each side, arrows says in which direction to spawn next platform
-void ASNF_PlatformBuilder::BuildPlatforms()
+TArray<AActor*> ASNF_PlatformBuilder::BuildPlatforms()
 {
+	TArray<AActor*>SpawnedPlatforms;
+
 	//Generate random number of platforms from each side in given range
 	int32 NumberToSpawnFromEachSide = FMath::RandRange(MinPlatformsToSpawnFromEachSide, MaxPlatformsToSpawnFromEachSide);
 
@@ -46,10 +46,12 @@ void ASNF_PlatformBuilder::BuildPlatforms()
 
 	TArray<AActor*>SpawnedFirstFourPlatforms = SpawnFirstFourPlatforms(LastSpawnedPlatform);
 
+	SpawnedPlatforms += SpawnedFirstFourPlatforms;
+
 	//Beacuse we have already spawn 1 platform from each side
 	NumberToSpawnFromEachSide--;
 
-	if (SpawnedFirstFourPlatforms.Num() == 0) { return; }
+	if (SpawnedFirstFourPlatforms.Num() == 0) { return TArray<AActor*>(); }
 
 	for (auto PlatformIterator : SpawnedFirstFourPlatforms)
 	{
@@ -107,6 +109,7 @@ void ASNF_PlatformBuilder::BuildPlatforms()
 						SpawnPosition.Location = EndLocationToTrace;
 						SpawnPosition.Length = Length;
 						LastSpawnedPlatform = SpawnPlatform(SpawnPosition);
+						SpawnedPlatforms.Push(LastSpawnedPlatform);
 						break;
 					}
 
@@ -115,7 +118,7 @@ void ASNF_PlatformBuilder::BuildPlatforms()
 			}
 		}
 	}
-	
+	return SpawnedPlatforms;
 }
 
 

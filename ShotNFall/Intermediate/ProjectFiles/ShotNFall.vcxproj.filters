@@ -72,6 +72,9 @@
     <ClInclude Include="..\..\Source\ShotNFall\Public\SNF_PlatformBuilder.h">
       <Filter>Source\ShotNFall\Public</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\ShotNFall\Public\SNFAIController.h">
+      <Filter>Source\ShotNFall\Public</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\ShotNFall\Private\SNFBasicWeapon.cpp">
@@ -81,6 +84,9 @@
       <Filter>Source\ShotNFall\Private</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\ShotNFall\Private\SNF_PlatformBuilder.cpp">
+      <Filter>Source\ShotNFall\Private</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\ShotNFall\Private\SNFAIController.cpp">
       <Filter>Source\ShotNFall\Private</Filter>
     </ClCompile>
   </ItemGroup>
