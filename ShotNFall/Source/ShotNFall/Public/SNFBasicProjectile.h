@@ -8,6 +8,8 @@
 
 class UStaticMeshComponent;
 class UProjectileMovementComponent;
+class UCapsuleComponent;
+class USceneComponent;
 
 UCLASS()
 class SHOTNFALL_API ASNFBasicProjectile : public AActor
@@ -22,7 +24,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	UStaticMeshComponent* MeshComp;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Components")

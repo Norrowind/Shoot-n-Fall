@@ -76,7 +76,7 @@ void ASNFAIController::Possess(APawn * InPawn)
 	TArray< AShotNFallCharacter*>CharacterPool = GameMode->GetCharacterPool();
 	if (CharacterPool.Num() != 0)
 	{
-		EnemyCharacter = GetEnemy(CharacterPool);
+		SearchForEnemies();
 		TargetToMoveTo = EnemyCharacter;
 
 	}
@@ -89,14 +89,33 @@ void ASNFAIController::Possess(APawn * InPawn)
 }
 
 
-AShotNFallCharacter* ASNFAIController::GetEnemy(const TArray<AShotNFallCharacter *>& CharacterPool)
+AShotNFallCharacter* ASNFAIController::GetNearestEnemy(const TArray<AShotNFallCharacter *>& CharacterPool)
 {
-	int32 CharacterNumberToAttack = FMath::RandRange(0, CharacterPool.Num() - 1);
-	while (CharacterPool[CharacterNumberToAttack] == AICharacter)
+
+	TArray<float>Distances;
+	TMap<float, AShotNFallCharacter*>DistancesToCharacters;
+	for (auto Character : CharacterPool)
 	{
-		CharacterNumberToAttack = FMath::RandRange(0, CharacterPool.Num() - 1);
+		if (Character != AICharacter)
+		{
+			float Distance = (AICharacter->GetActorLocation() - Character->GetActorLocation()).Size();
+			DistancesToCharacters.Add(Distance, Character);
+			Distances.Push(Distance);
+		}
 	}
-	return CharacterPool[CharacterNumberToAttack];
+
+	float LeastDistance = Distances[0];
+	for (int32 i = 1; i < Distances.Num(); i++)
+	{
+		if (Distances[i] < LeastDistance)
+		{
+			LeastDistance = Distances[i];
+		}
+	}
+
+	AShotNFallCharacter* NearestCharacter = *DistancesToCharacters.Find(LeastDistance);
+	return NearestCharacter;
+
 }
 
 void ASNFAIController::SearchForEnemies()
@@ -112,7 +131,7 @@ void ASNFAIController::SearchForEnemies()
 		}
 		else
 		{
-			EnemyCharacter = GetEnemy(GameMode->GetCharacterPool());
+			EnemyCharacter = GetNearestEnemy(GameMode->GetCharacterPool());
 			if (bIsAgressive)
 			{
 				TargetToMoveTo = EnemyCharacter;
@@ -209,11 +228,18 @@ void ASNFAIController::ChaseAndShoot(ACharacter* Target)
 
 			if (Target->bIsCrouched)
 			{
-				Crouch();
+				if(!AICharacter->bIsCrouched)
+				{
+					DelayCrouch();
+				}
+
 			}
 			else
 			{
-				UnCrouch();
+				if (AICharacter->bIsCrouched)
+				{
+					DelayUnCrouch();
+				}
 			}
 
 			Fire();
@@ -223,7 +249,7 @@ void ASNFAIController::ChaseAndShoot(ACharacter* Target)
 			AICharacter->StopWeaponFire();
 			if (AICharacter->bIsCrouched)
 			{
-				UnCrouch();
+				DelayUnCrouch();
 			}
 			MoveToTarget(Target);
 		}
@@ -237,13 +263,13 @@ void ASNFAIController::Fire()
 	GetWorldTimerManager().SetTimer(TimerHandle_ShootTimer, AICharacter, &AShotNFallCharacter::StartWeaponFire, 0.1f);
 }
 
-void ASNFAIController::Crouch()
+void ASNFAIController::DelayCrouch()
 {
 	FTimerHandle TimerHandle_CrouchDelayTimer;
 	GetWorldTimerManager().SetTimer(TimerHandle_CrouchDelayTimer, AICharacter, &AShotNFallCharacter::StartCrouch, 0.2f);
 }
 
-void ASNFAIController::UnCrouch()
+void ASNFAIController::DelayUnCrouch()
 {
 	FTimerHandle TimerHandle_UnCrouchDelayTimer;
 	GetWorldTimerManager().SetTimer(TimerHandle_UnCrouchDelayTimer, AICharacter, &AShotNFallCharacter::StopCrouch, 0.2f);
@@ -276,7 +302,23 @@ void ASNFAIController::NotifyBullets(const TArray<AActor*>& Bullets)
 			float VerticalLocationDelta = FMath::Abs(Bullet->GetActorLocation().Z - AICharacter->GetActorLocation().Z);
 			if ((Bullet->GetOwner() == EnemyCharacter) && VerticalLocationDelta < VerticalDeltaToShoot)
 			{
-				AICharacter->Jump();
+				bool bShouldCrouch = FMath::RandRange(0, 1);
+				if (bShouldCrouch)
+				{
+					if (!AICharacter->bIsCrouched)
+					{
+						AICharacter->Crouch();
+					}
+				}
+				else
+				{
+					if (AICharacter->bIsCrouched)
+					{
+						AICharacter->UnCrouch();
+					}
+					AICharacter->Jump();
+				}
+
 			}
 
 			if (Cast<ASNFBasicProjectile>(Bullet))

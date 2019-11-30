@@ -19,6 +19,7 @@ ASNFBasicProjectile::ASNFBasicProjectile()
 
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh Comp"));
 	RootComponent = MeshComp;
+
 	MeshComp->OnComponentHit.AddDynamic(this, &ASNFBasicProjectile::OnHit);
 	MeshComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	MeshComp->SetCollisionObjectType(COLLISION_PROJECTILE);

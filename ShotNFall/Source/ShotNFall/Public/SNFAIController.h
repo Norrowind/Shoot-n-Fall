@@ -38,15 +38,15 @@ protected:
 
 	void ChaseAndShoot(ACharacter* Target);
 
-	AShotNFallCharacter* GetEnemy(const TArray<AShotNFallCharacter *>& CharacterPool);
+	AShotNFallCharacter* GetNearestEnemy(const TArray<AShotNFallCharacter *>& CharacterPool);
 
 	void SearchForEnemies();
 
 	void Fire();
 
-	void UnCrouch();
+	void DelayUnCrouch();
 
-	void Crouch();
+	void DelayCrouch();
 
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
