@@ -63,9 +63,7 @@ protected:
 
 	void MoveToTarget(AActor* Target);
 
-	bool ShouldJump(AActor* CurrentPlatform);
-
-	bool CanJump(AActor* PlatformToCheck, FVector AILocation, FVector GravitationalForce);
+	void JumpOrSlide(AActor * IntermidiatePathPoint, AActor * StartPointActor, bool IsInAir);
 
 	FVector GetPlatformEdgePoint(AActor* PlatformToGet, FVector AILocation);
 
@@ -84,13 +82,10 @@ protected:
 	float DistanceToPlatformEdge;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Gameplay")
+	float DistanceToJump;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Gameplay")
 	float DistanceToMoveToTarget;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Gameplay")
-	FVector GravitationalForce;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Gameplay")
-	float MovementSpeed;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Gameplay")
 	float JumpTime;
@@ -101,11 +96,14 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Gameplay")
 	float SlideAcceleration;
 
+	UPROPERTY()
 	AActor* TargetToMoveTo;
 
 private:
 
 	void RecoverStun();
+
+	void FindPath(TArray<AActor*>& PathPoints, AActor* From, AActor* To, int32& PathPointIndex);
 
 	UPROPERTY()
 	AShotNFallCharacter* AICharacter;
@@ -116,13 +114,20 @@ private:
 	UPROPERTY()
 	AShotNFallGameMode* GameMode;
 
-	AActor* PlatformAIStandsOn;
-
 	UPROPERTY()
 	UCapsuleComponent* AINavigationUpCapsule;
 
 	UPROPERTY()
 	UCapsuleComponent* AINavigationDownCapsule;
+
+	UPROPERTY()
+	TArray<AActor*>PathPoints;
+
+	AActor* StartPointActor;
+
+	AActor* EndPointActor;
+
+	int32 CurrentPathPointIndex;
 
 	bool bGonnaJump;
 

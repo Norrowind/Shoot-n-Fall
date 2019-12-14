@@ -51,7 +51,12 @@ protected:
 	void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	/*To track current weapon which character handle*/
+	UPROPERTY()
 	ASNFBasicWeapon* CurrentWeapon;
+
+	/*To track current platform(use for AI logic)*/
+	UPROPERTY()
+	AActor* PlatformCharacterStandsOn;
 
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
@@ -70,6 +75,8 @@ public:
 
 	FORCEINLINE UCapsuleComponent* GetAINavigationDownCapsule() const { return AINavigationDownCapsule; }
 
+	FORCEINLINE AActor* GetPlatformCharacterStands() const { return PlatformCharacterStandsOn; }
+
 	FOnCharacterFallen OnFallen;
 
 	UFUNCTION(BlueprintCallable, Category = "Fire")
@@ -81,9 +88,6 @@ public:
 	void StartCrouch();
 
 	void StopCrouch();
-
-
-
 
 private:
 

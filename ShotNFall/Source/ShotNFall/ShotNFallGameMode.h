@@ -32,12 +32,15 @@ public:
 
 	float GetRespawnTime() const;
 
+	TArray<AActor*> GetAllSpawnedPlatforms() const;
+
 	int32 DeleteFromCharacterPool(AShotNFallCharacter* CharacterToDelete);
 
 protected:
 
 	virtual void BeginPlay() override;
-
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	
 	AShotNFallCharacter* SpawnCharacter(const FVector& PlatformLocation, TArray<AShotNFallCharacter*>& CharactersPool);
 
 	virtual void Tick(float DeltaTime) override;

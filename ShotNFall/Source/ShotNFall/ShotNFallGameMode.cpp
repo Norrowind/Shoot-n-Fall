@@ -8,6 +8,7 @@
 #include "ShotNFallCharacter.h"
 #include "Public/SNFAIController.h"
 #include "TimerManager.h"
+#include "Public/CustomNavigationData.h"
 
 AShotNFallGameMode::AShotNFallGameMode()
 {
@@ -20,7 +21,7 @@ AShotNFallGameMode::AShotNFallGameMode()
 	CharacterSpawnVerticalLocation = FVector(0.f, 0.f, 200.f);
 	CenterLevelLocation = FVector(0.f, 0.f, 1000.f);
 	RespawnTime = 3.f;
-
+	
 }
 
 TArray<AShotNFallCharacter*> AShotNFallGameMode::GetCharacterPool()
@@ -36,6 +37,9 @@ void AShotNFallGameMode::BeginPlay()
 	ASNF_PlatformBuilder* Builder = GetWorld()->SpawnActor<ASNF_PlatformBuilder>(LevelBuilderClass, CenterLevelLocation, FRotator::ZeroRotator);
 	Builder->SetActorScale3D(FVector(1.75f, 15.f, 1.16));
 	Platforms = Builder->BuildPlatforms();
+	Platforms.Add(Builder);
+
+	ACustomNavigationData::BuildNavigationGraphNodesData(Platforms);
 
 	//Spawn characters and possess controllers
 	for(int32 i = 0; i < NumberOfBots + 1; i++)
@@ -60,6 +64,13 @@ void AShotNFallGameMode::BeginPlay()
 		}
 	}
 
+}
+
+void AShotNFallGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	ACustomNavigationData::ClearNavigationData();
 }
 
 AShotNFallCharacter* AShotNFallGameMode::SpawnCharacter(const FVector& PlatformLocation, TArray<AShotNFallCharacter*>& CharactersPool)
@@ -124,6 +135,11 @@ void AShotNFallGameMode::RespawnCharacter(AController* ControllerToPossess)
 float AShotNFallGameMode::GetRespawnTime() const
 {
 	return RespawnTime;
+}
+
+TArray<AActor*> AShotNFallGameMode::GetAllSpawnedPlatforms() const
+{
+	return Platforms;
 }
 
 int32 AShotNFallGameMode::DeleteFromCharacterPool(AShotNFallCharacter * CharacterToDelete)

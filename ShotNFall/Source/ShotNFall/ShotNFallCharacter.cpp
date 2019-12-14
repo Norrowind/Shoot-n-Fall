@@ -10,6 +10,8 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Engine/TriggerBox.h"
 #include "ShotNFallGameMode.h"
+#include "PhysicalMaterials/PhysicalMaterial.h"
+#include "ShotNFall.h"
 
 AShotNFallCharacter::AShotNFallCharacter()
 {
@@ -136,7 +138,12 @@ void AShotNFallCharacter::StopWeaponFire()
 
 void AShotNFallCharacter::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, FVector NormalImpulse, const FHitResult & Hit)
 {
+	EPhysicalSurface SurfaceType = UPhysicalMaterial::DetermineSurfaceType(Hit.PhysMaterial.Get());
+	if (SurfaceType == SURFACE_PLATFORM)
+	{
+		PlatformCharacterStandsOn = OtherActor;
 
+	}
 }
 
 void AShotNFallCharacter::OnOverlapEnd(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)

@@ -167,7 +167,9 @@ DEFINE_VTABLE_PTR_HELPER_CTOR_CALLER(AShotNFallCharacter); \
 	FORCEINLINE static uint32 __PPO__AINavigationUpCapsule() { return STRUCT_OFFSET(AShotNFallCharacter, AINavigationUpCapsule); } \
 	FORCEINLINE static uint32 __PPO__AINavigationDownCapsule() { return STRUCT_OFFSET(AShotNFallCharacter, AINavigationDownCapsule); } \
 	FORCEINLINE static uint32 __PPO__StarterWeaponClass() { return STRUCT_OFFSET(AShotNFallCharacter, StarterWeaponClass); } \
-	FORCEINLINE static uint32 __PPO__StarterWeaponSocketName() { return STRUCT_OFFSET(AShotNFallCharacter, StarterWeaponSocketName); }
+	FORCEINLINE static uint32 __PPO__StarterWeaponSocketName() { return STRUCT_OFFSET(AShotNFallCharacter, StarterWeaponSocketName); } \
+	FORCEINLINE static uint32 __PPO__CurrentWeapon() { return STRUCT_OFFSET(AShotNFallCharacter, CurrentWeapon); } \
+	FORCEINLINE static uint32 __PPO__PlatformCharacterStandsOn() { return STRUCT_OFFSET(AShotNFallCharacter, PlatformCharacterStandsOn); }
 
 
 #define ShotNFall_Source_ShotNFall_ShotNFallCharacter_h_14_PROLOG

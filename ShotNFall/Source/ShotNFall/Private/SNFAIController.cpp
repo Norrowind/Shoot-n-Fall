@@ -16,6 +16,7 @@
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
 #include "ShotNFallGameMode.h"
+#include "Public/CustomNavigationData.h"
 
 
 ASNFAIController::ASNFAIController()
@@ -41,12 +42,10 @@ ASNFAIController::ASNFAIController()
 	VerticalDeltaToShoot = 20.f;
 	HorizontalDeltaToShoot = 1500.f;
 	DistanceToPlatformEdge = 300.f;
+	DistanceToJump = 500.f;
 	DistanceToMoveToTarget = 500.f;
-	GravitationalForce = FVector(0.f, 0.f, -2.f);
-	MovementSpeed = 600.f;
 	JumpTime = 0.08f;
 	SlideAcceleration = 500.f;
-	bGonnaJump = false;
 	bIsStunned = false;
 	bIsAgressive = true;
 
@@ -67,12 +66,7 @@ void ASNFAIController::Possess(APawn * InPawn)
 
 	AICharacter = Cast< AShotNFallCharacter>(GetPawn());
 
-	if (AICharacter)
-	{
-		AINavigationDownCapsule = AICharacter->GetAINavigationDownCapsule();
-		AINavigationUpCapsule = AICharacter->GetAINavigationUpCapsule();
-	}
-
+	//Searching for enemy
 	TArray< AShotNFallCharacter*>CharacterPool = GameMode->GetCharacterPool();
 	if (CharacterPool.Num() != 0)
 	{
@@ -81,6 +75,7 @@ void ASNFAIController::Possess(APawn * InPawn)
 
 	}
 
+	//Bounding delegate function to handle projectile hitting
 	if (AICharacter)
 	{
 		AICharacter->GetCapsuleComponent()->OnComponentHit.AddDynamic(this, &ASNFAIController::OnHit);
@@ -88,7 +83,7 @@ void ASNFAIController::Possess(APawn * InPawn)
 
 }
 
-
+//When current enemy dies, set new enemy which is closest to AI character
 AShotNFallCharacter* ASNFAIController::GetNearestEnemy(const TArray<AShotNFallCharacter *>& CharacterPool)
 {
 
@@ -118,12 +113,13 @@ AShotNFallCharacter* ASNFAIController::GetNearestEnemy(const TArray<AShotNFallCh
 
 }
 
+//Searching for enemy in character pool 
 void ASNFAIController::SearchForEnemies()
 {
 	UE_LOG(LogTemp, Warning, TEXT("SearchForEnemies called!"))
 	if (GameMode)
 	{
-
+		//If only one AI Character exist - check every 3 seconds for new spawned character...
 		if (GameMode->GetCharacterPool().Num() <= 1)
 		{
 			FTimerHandle TimerHandle_EnemySearhTimer;
@@ -131,6 +127,7 @@ void ASNFAIController::SearchForEnemies()
 		}
 		else
 		{
+			//...if other characters exist on the level - get the nearest one and set enemy 
 			EnemyCharacter = GetNearestEnemy(GameMode->GetCharacterPool());
 			if (bIsAgressive)
 			{
@@ -140,16 +137,10 @@ void ASNFAIController::SearchForEnemies()
 	}
 }
 
+//If hit by projectile - stun
 void ASNFAIController::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, FVector NormalImpulse, const FHitResult & Hit)
 {
 	
-	EPhysicalSurface SurfaceType = UPhysicalMaterial::DetermineSurfaceType(Hit.PhysMaterial.Get());
-	if (SurfaceType == SURFACE_PLATFORM)
-	{
-		PlatformAIStandsOn = OtherActor;
-
-	}
-
 	if (Cast<ASNFBasicProjectile>(OtherActor))
 	{
 		Stun();
@@ -158,9 +149,10 @@ void ASNFAIController::OnHit(UPrimitiveComponent * HitComponent, AActor * OtherA
 	
 }
 
+//Delegate which fires by game mode when someone dies
 void ASNFAIController::OnCharacterFallen(AShotNFallCharacter* FallenCharacter)
 {
-	UE_LOG(LogTemp, Warning, TEXT("OnCharacterFallen called!"))
+	//if dead character is current enemy - search for new one
 	if (FallenCharacter == EnemyCharacter)
 	{
 		SearchForEnemies();
@@ -182,16 +174,9 @@ void ASNFAIController::RecoverStun()
 	GetWorldTimerManager().ClearTimer(TimerHandle_StunTimer);
 }
 
-
-
 void ASNFAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (EnemyCharacter && AICharacter)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("%s enemy is %s"), *AICharacter->GetName(), *EnemyCharacter->GetName())
-	}
 
 	if (!AICharacter) { return; }
 
@@ -215,13 +200,14 @@ void ASNFAIController::Tick(float DeltaTime)
 }
 
 
-
 void ASNFAIController::ChaseAndShoot(ACharacter* Target)
 {
 	if (Target)
 	{
 		float VerticalLocationDelta = FMath::Abs(Target->GetActorLocation().Z - AICharacter->GetActorLocation().Z);
 		float HorizontalLocationDelta = FMath::Abs(Target->GetActorLocation().Y - AICharacter->GetActorLocation().Y);
+
+		//if enemy at right distance- focus on him, check its state(crouching or not) and shoot
 		if (VerticalLocationDelta < VerticalDeltaToShoot && HorizontalLocationDelta < HorizontalDeltaToShoot)
 		{
 			LookOnTarget(Target);
@@ -244,6 +230,8 @@ void ASNFAIController::ChaseAndShoot(ACharacter* Target)
 
 			Fire();
 		}
+
+		//stop shooting and continue to chase the target
 		else
 		{
 			AICharacter->StopWeaponFire();
@@ -256,13 +244,14 @@ void ASNFAIController::ChaseAndShoot(ACharacter* Target)
 	}
 }
 
-
+//small delay before shooting starts for handling automatic weapon fire
 void ASNFAIController::Fire()
 {
 	FTimerHandle TimerHandle_ShootTimer;
 	GetWorldTimerManager().SetTimer(TimerHandle_ShootTimer, AICharacter, &AShotNFallCharacter::StartWeaponFire, 0.1f);
 }
 
+//delay for more natural looking 
 void ASNFAIController::DelayCrouch()
 {
 	FTimerHandle TimerHandle_CrouchDelayTimer;
@@ -275,7 +264,7 @@ void ASNFAIController::DelayUnCrouch()
 	GetWorldTimerManager().SetTimer(TimerHandle_UnCrouchDelayTimer, AICharacter, &AShotNFallCharacter::StopCrouch, 0.2f);
 }
 
-
+//Set Yaw of character to focus on right target
 void ASNFAIController::LookOnTarget(AActor* Target)
 {
 	if (!(AICharacter && Target)) { return; }
@@ -293,15 +282,18 @@ void ASNFAIController::LookOnTarget(AActor* Target)
 
 }
 
+
 void ASNFAIController::NotifyBullets(const TArray<AActor*>& Bullets)
 {
 	if (AICharacter)
 	{
 		for (auto Bullet : Bullets)
 		{
+			//if bullet was shoot by current enemy and bullet is able to hit character - evade 
 			float VerticalLocationDelta = FMath::Abs(Bullet->GetActorLocation().Z - AICharacter->GetActorLocation().Z);
 			if ((Bullet->GetOwner() == EnemyCharacter) && VerticalLocationDelta < VerticalDeltaToShoot)
 			{
+				//randomly choose how to evade - with a jump or crouch
 				bool bShouldCrouch = FMath::RandRange(0, 1);
 				if (bShouldCrouch)
 				{
@@ -321,16 +313,20 @@ void ASNFAIController::NotifyBullets(const TArray<AActor*>& Bullets)
 
 			}
 
+			//if someone who shoot ai character is closer than current enemy - set this character as enemy
 			if (Cast<ASNFBasicProjectile>(Bullet))
 			{
 				AActor* DistractingActor = Bullet->GetOwner();
 				if (DistractingActor != AICharacter)
 				{
-					float DistanceToDistractingActor = (DistractingActor->GetActorLocation() - AICharacter->GetActorLocation()).Size();
-					float DistanceToCurrentTarget = (TargetToMoveTo->GetActorLocation() - AICharacter->GetActorLocation()).Size();
-					if (DistanceToDistractingActor < DistanceToCurrentTarget)
+					if (DistractingActor && AICharacter && TargetToMoveTo)
 					{
-						EnemyCharacter = Cast<AShotNFallCharacter>(DistractingActor);
+						float DistanceToDistractingActor = (DistractingActor->GetActorLocation() - AICharacter->GetActorLocation()).Size();
+						float DistanceToCurrentTarget = (TargetToMoveTo->GetActorLocation() - AICharacter->GetActorLocation()).Size();
+						if (DistanceToDistractingActor < DistanceToCurrentTarget)
+						{
+							EnemyCharacter = Cast<AShotNFallCharacter>(DistractingActor);
+						}
 					}
 				}
 			}
@@ -338,21 +334,23 @@ void ASNFAIController::NotifyBullets(const TArray<AActor*>& Bullets)
 	}
 }
 
+//Move to target using custom pathfinding logic
 void ASNFAIController::MoveToTarget(AActor * Target)
 {
 	if (!bIsStunned && Target)
-	{
-		if (AICharacter)
+	{	
+		AShotNFallCharacter* CharacterToFollow = Cast<AShotNFallCharacter>(Target);
+		AActor* IntermidiatePathPoint;
+		if (CharacterToFollow && AICharacter)
 		{
+
+			EndPointActor = CharacterToFollow->GetPlatformCharacterStands();
+			StartPointActor = AICharacter->GetPlatformCharacterStands();
+
 			bool IsInAir = AICharacter->GetMovementComponent()->IsFalling();
-			if (!(IsInAir && bGonnaJump))
-			{
-				LookOnTarget(Target);
-			}
 
-			MoveToActor(Target, DistanceToMoveToTarget);
-
-			if (IsInAir && bGonnaJump)
+			//Perform "air control" during jump
+			if (IsInAir)
 			{
 				float Yaw = AICharacter->GetActorRotation().Yaw;
 				FRotator CurrentRotation(0.f, Yaw, 0.f);
@@ -360,77 +358,127 @@ void ASNFAIController::MoveToTarget(AActor * Target)
 
 			}
 
-			if (PlatformAIStandsOn)
+			if (StartPointActor && EndPointActor)
 			{
-
-				if (ShouldJump(PlatformAIStandsOn) && !IsInAir)
+				//if ai character and enemy are on the same platform - use standart UE4 pathfinding 
+				if (EndPointActor == StartPointActor)
 				{
+					IntermidiatePathPoint = Target;
+					MoveToActor(Target, DistanceToMoveToTarget);
+				}
 
-					if (Target->GetActorLocation().Z >= AICharacter->GetActorLocation().Z)
+				//use custom pathfinding logic 
+				else
+				{
+					FindPath(PathPoints, StartPointActor, EndPointActor, CurrentPathPointIndex);
+					if (PathPoints.IsValidIndex(CurrentPathPointIndex))
 					{
-						TArray<AActor*> OverlappingPlatforms;
-						AINavigationUpCapsule->GetOverlappingActors(OverlappingPlatforms);
-						for (auto Platform : OverlappingPlatforms)
-						{
-							if (CanJump(Platform, AICharacter->GetActorLocation(), GravitationalForce))
-							{
-
-								LookOnTarget(Platform);
-								AICharacter->JumpMaxHoldTime = JumpTime;
-								AICharacter->Jump();
-								break;
-							}
-						}
-
+						IntermidiatePathPoint = PathPoints[CurrentPathPointIndex];
 					}
-					else if (Target->GetActorLocation().Z < AICharacter->GetActorLocation().Z)
+					else
 					{
-						TArray<AActor*> OverlappingPlatforms;
-						AINavigationDownCapsule->GetOverlappingActors(OverlappingPlatforms);
-						if (OverlappingPlatforms.Num() > 0)
-						{
-							FVector SlideForwardVelocity = AICharacter->GetActorForwardVector() * SlideAcceleration;
-							AICharacter->LaunchCharacter(SlideForwardVelocity, true, false);
-						}
-
+						IntermidiatePathPoint = nullptr;
 					}
+					JumpOrSlide(IntermidiatePathPoint, StartPointActor, IsInAir);
 				}
 			}
+
+		}
+
+	}
+}
+
+//To handle jump and slide down logic to move beetween platform
+void ASNFAIController::JumpOrSlide(AActor * IntermidiatePathPoint, AActor * StartPointActor, bool IsInAir)
+{
+	if (IntermidiatePathPoint)
+	{
+		MoveToActor(IntermidiatePathPoint, DistanceToMoveToTarget);
+
+		// if enough close to platform to move to and its above character - jump...
+		if (IntermidiatePathPoint->GetActorLocation().Z >= AICharacter->GetActorLocation().Z)
+		{
+			FVector PlatformEdge = GetPlatformEdgePoint(IntermidiatePathPoint, AICharacter->GetActorLocation());
+			if (FMath::Abs(PlatformEdge.Y - AICharacter->GetActorLocation().Y) < DistanceToJump)
+			{
+				AICharacter->JumpMaxHoldTime = JumpTime;
+				AICharacter->Jump();
+
+				//set next point to move to
+				CurrentPathPointIndex++;
+			}
+
+		}
+
+		// if enough close to platform edge and platform to move below character - slide down...
+		else if (IntermidiatePathPoint->GetActorLocation().Z < AICharacter->GetActorLocation().Z)
+		{
+			FVector PlatformEdge = GetPlatformEdgePoint(StartPointActor, AICharacter->GetActorLocation());
+			if (FMath::Abs(PlatformEdge.Y - AICharacter->GetActorLocation().Y) < DistanceToPlatformEdge)
+			{
+				FVector SlideForwardVelocity = AICharacter->GetActorForwardVector() * SlideAcceleration;
+				AICharacter->LaunchCharacter(SlideForwardVelocity, true, false);
+
+				//set next point to move to
+				CurrentPathPointIndex++;
+			}
+		}
+
+		// if landed on the ground - look in direction to move to
+		if (!IsInAir)
+		{
+			LookOnTarget(IntermidiatePathPoint);
 		}
 	}
 }
 
-bool ASNFAIController::ShouldJump(AActor * CurrentPlatform)
+void ASNFAIController::FindPath(TArray<AActor*>& PathPointsToFill, AActor * From, AActor * To, int32& PathPointIndex)
 {
-	FVector Origin;
-	FVector BoxExtent;
-	CurrentPlatform->GetActorBounds(true, Origin, BoxExtent);
+	static AActor* CashedEndPoint = nullptr;
 
-	bool IsNearToLeftEdge = ((Origin + BoxExtent).Y - AICharacter->GetActorLocation().Y) < DistanceToPlatformEdge;
-	bool IsNearToRightEdge = FMath::Abs((Origin - BoxExtent).Y - AICharacter->GetActorLocation().Y) < DistanceToPlatformEdge;
-	if (IsNearToLeftEdge || IsNearToRightEdge)
+	//if gonna build path for the first time - build path
+	if (!CashedEndPoint)
 	{
-		bGonnaJump = true;
-		return true;
+		CashedEndPoint = To;
+		ACustomNavigationData::BuildPath(PathPointsToFill, From, To);
+		PathPointIndex = 1;
+		return;
 	}
-	else
-	{
-		bGonnaJump = false;
-		return false;
-	}
-}
-
-bool ASNFAIController::CanJump(AActor* PlatformToCheck, FVector AILocation, FVector GravitationalForce)
-{
-	FVector EdgePoint = GetPlatformEdgePoint(PlatformToCheck, AILocation);
-	float HorizontalDistance = (EdgePoint - AILocation ).Size();
-	float TravelTime = HorizontalDistance / MovementSpeed;
-	FVector FalloffVector = GravitationalForce / 2 * pow(TravelTime, 2);
-
-	return (AILocation - FalloffVector).Z <= EdgePoint.Z;
 	
+	//if enemy change his location to another platform - rebuild path
+	if (CashedEndPoint != To)
+	{ 
+		CashedEndPoint = To;
+		if (PathPointsToFill.Num() > 0)
+		{
+			PathPointsToFill.Empty();
+		}
+		ACustomNavigationData::BuildPath(PathPointsToFill, From, To);
+		PathPointIndex = 1;
+		return;
+	}
+
+	else if (PathPointsToFill.Num() > 0)
+	{
+		//if ai character not loosing the way and moving the right path - no need to rebuild path...
+		if (From == PathPointsToFill[PathPointIndex - 1]) { return; }
+
+		//... in another case - reduilt path
+		else
+		{
+			if (PathPointsToFill.Num() > 0)
+			{
+				PathPointsToFill.Empty();
+			}
+			ACustomNavigationData::BuildPath(PathPointsToFill, From, To);
+			PathPointIndex = 1;
+		}
+	}
+
+
 }
 
+//find location of platform edge point which is opposite the character location
 FVector ASNFAIController::GetPlatformEdgePoint(AActor* PlatformToGet, FVector AILocation)
 {
 	FVector Origin;

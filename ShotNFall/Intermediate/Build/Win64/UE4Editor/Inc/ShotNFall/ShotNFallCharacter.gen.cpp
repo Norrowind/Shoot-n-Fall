@@ -26,8 +26,8 @@ void EmptyLinkFunctionForGeneratedCodeShotNFallCharacter() {}
 	SHOTNFALL_API UFunction* Z_Construct_UFunction_AShotNFallCharacter_OnOverlapEnd();
 	SHOTNFALL_API UFunction* Z_Construct_UFunction_AShotNFallCharacter_StartWeaponFire();
 	SHOTNFALL_API UFunction* Z_Construct_UFunction_AShotNFallCharacter_StopWeaponFire();
-	COREUOBJECT_API UClass* Z_Construct_UClass_UClass();
 	SHOTNFALL_API UClass* Z_Construct_UClass_ASNFBasicWeapon_NoRegister();
+	COREUOBJECT_API UClass* Z_Construct_UClass_UClass();
 	ENGINE_API UClass* Z_Construct_UClass_UCapsuleComponent_NoRegister();
 	ENGINE_API UClass* Z_Construct_UClass_USpringArmComponent_NoRegister();
 	ENGINE_API UClass* Z_Construct_UClass_UCameraComponent_NoRegister();
@@ -265,6 +265,14 @@ void EmptyLinkFunctionForGeneratedCodeShotNFallCharacter() {}
 		static const UE4CodeGen_Private::FMetaDataPairParam Class_MetaDataParams[];
 #endif
 #if WITH_METADATA
+		static const UE4CodeGen_Private::FMetaDataPairParam NewProp_PlatformCharacterStandsOn_MetaData[];
+#endif
+		static const UE4CodeGen_Private::FObjectPropertyParams NewProp_PlatformCharacterStandsOn;
+#if WITH_METADATA
+		static const UE4CodeGen_Private::FMetaDataPairParam NewProp_CurrentWeapon_MetaData[];
+#endif
+		static const UE4CodeGen_Private::FObjectPropertyParams NewProp_CurrentWeapon;
+#if WITH_METADATA
 		static const UE4CodeGen_Private::FMetaDataPairParam NewProp_StarterWeaponSocketName_MetaData[];
 #endif
 		static const UE4CodeGen_Private::FNamePropertyParams NewProp_StarterWeaponSocketName;
@@ -309,6 +317,20 @@ void EmptyLinkFunctionForGeneratedCodeShotNFallCharacter() {}
 		{ "ModuleRelativePath", "ShotNFallCharacter.h" },
 	};
 #endif
+#if WITH_METADATA
+	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UClass_AShotNFallCharacter_Statics::NewProp_PlatformCharacterStandsOn_MetaData[] = {
+		{ "ModuleRelativePath", "ShotNFallCharacter.h" },
+		{ "ToolTip", "To track current platform(use for AI logic)" },
+	};
+#endif
+	const UE4CodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AShotNFallCharacter_Statics::NewProp_PlatformCharacterStandsOn = { UE4CodeGen_Private::EPropertyClass::Object, "PlatformCharacterStandsOn", RF_Public|RF_Transient|RF_MarkAsNative, (EPropertyFlags)0x0020080000000000, 1, nullptr, STRUCT_OFFSET(AShotNFallCharacter, PlatformCharacterStandsOn), Z_Construct_UClass_AActor_NoRegister, METADATA_PARAMS(Z_Construct_UClass_AShotNFallCharacter_Statics::NewProp_PlatformCharacterStandsOn_MetaData, ARRAY_COUNT(Z_Construct_UClass_AShotNFallCharacter_Statics::NewProp_PlatformCharacterStandsOn_MetaData)) };
+#if WITH_METADATA
+	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UClass_AShotNFallCharacter_Statics::NewProp_CurrentWeapon_MetaData[] = {
+		{ "ModuleRelativePath", "ShotNFallCharacter.h" },
+		{ "ToolTip", "To track current weapon which character handle" },
+	};
+#endif
+	const UE4CodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AShotNFallCharacter_Statics::NewProp_CurrentWeapon = { UE4CodeGen_Private::EPropertyClass::Object, "CurrentWeapon", RF_Public|RF_Transient|RF_MarkAsNative, (EPropertyFlags)0x0020080000000000, 1, nullptr, STRUCT_OFFSET(AShotNFallCharacter, CurrentWeapon), Z_Construct_UClass_ASNFBasicWeapon_NoRegister, METADATA_PARAMS(Z_Construct_UClass_AShotNFallCharacter_Statics::NewProp_CurrentWeapon_MetaData, ARRAY_COUNT(Z_Construct_UClass_AShotNFallCharacter_Statics::NewProp_CurrentWeapon_MetaData)) };
 #if WITH_METADATA
 	const UE4CodeGen_Private::FMetaDataPairParam Z_Construct_UClass_AShotNFallCharacter_Statics::NewProp_StarterWeaponSocketName_MetaData[] = {
 		{ "Category", "Weapon" },
@@ -363,6 +385,8 @@ void EmptyLinkFunctionForGeneratedCodeShotNFallCharacter() {}
 #endif
 	const UE4CodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AShotNFallCharacter_Statics::NewProp_SideViewCameraComponent = { UE4CodeGen_Private::EPropertyClass::Object, "SideViewCameraComponent", RF_Public|RF_Transient|RF_MarkAsNative, (EPropertyFlags)0x00400000000a001d, 1, nullptr, STRUCT_OFFSET(AShotNFallCharacter, SideViewCameraComponent), Z_Construct_UClass_UCameraComponent_NoRegister, METADATA_PARAMS(Z_Construct_UClass_AShotNFallCharacter_Statics::NewProp_SideViewCameraComponent_MetaData, ARRAY_COUNT(Z_Construct_UClass_AShotNFallCharacter_Statics::NewProp_SideViewCameraComponent_MetaData)) };
 	const UE4CodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_AShotNFallCharacter_Statics::PropPointers[] = {
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AShotNFallCharacter_Statics::NewProp_PlatformCharacterStandsOn,
+		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AShotNFallCharacter_Statics::NewProp_CurrentWeapon,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AShotNFallCharacter_Statics::NewProp_StarterWeaponSocketName,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AShotNFallCharacter_Statics::NewProp_StarterWeaponClass,
 		(const UE4CodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AShotNFallCharacter_Statics::NewProp_AINavigationDownCapsule,
@@ -393,7 +417,7 @@ void EmptyLinkFunctionForGeneratedCodeShotNFallCharacter() {}
 		}
 		return OuterClass;
 	}
-	IMPLEMENT_CLASS(AShotNFallCharacter, 4128470458);
+	IMPLEMENT_CLASS(AShotNFallCharacter, 37148101);
 	static FCompiledInDefer Z_CompiledInDefer_UClass_AShotNFallCharacter(Z_Construct_UClass_AShotNFallCharacter, &AShotNFallCharacter::StaticClass, TEXT("/Script/ShotNFall"), TEXT("AShotNFallCharacter"), false, nullptr, nullptr, nullptr);
 	DEFINE_VTABLE_PTR_HELPER_CTOR(AShotNFallCharacter);
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
