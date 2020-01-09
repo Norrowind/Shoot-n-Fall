@@ -1,8 +1,8 @@
 # Side-scroller shooter game . The game is being created on UE4 with C++ and some Blueprints(properties settings).
 
-# [Video with current state of game](https://drive.google.com/open?id=1_vpVHC_RWn7xk4VV_mTR1R6L21WRFba4)
+# [Video which shows basic gameplay(early prototype)](https://drive.google.com/open?id=1_vpVHC_RWn7xk4VV_mTR1R6L21WRFba4)
 *Video will be updated as soon as new feature will be realized.*
-**Last update: 27.11.19**
+# [Video which shows custom AI pathfinding logic, based on A* algorithm](https://drive.google.com/file/d/1dzZz3mio-nONtEC_kmLxKLNWgk7YP9ZT/view?usp=drivesdk)
 
 ## Main goal is to push-off enemy from the platform to "abyss" using weapons. Game level is the set of platforms in the air. Platforms are generated randomly( position and size).
 
