@@ -15,7 +15,7 @@
   - Random level generation(logic imlemented in PlatformBuilder class)
   - AI logic
 
-- Will be imlemented in the nearest future(untill the end of November):
+- Will be imlemented in future:
   - Multiplayer support, using UE4 replication system
   - Power-ups and different weapons(assault rifle, shotgun, rocket launcher, sniper rifle, sword)
   - UI, using UE 4 UMG system
