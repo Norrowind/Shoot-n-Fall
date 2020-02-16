@@ -96,9 +96,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Gameplay")
 	float SlideAcceleration;
 
-	UPROPERTY()
-	AActor* TargetToMoveTo;
-
 private:
 
 	void RecoverStun();
@@ -132,8 +129,6 @@ private:
 	bool bGonnaJump;
 
 	bool bIsStunned;
-
-	bool bIsAgressive;
 
 	FTimerHandle TimerHandle_StunTimer;
 

@@ -48,7 +48,8 @@ void ASNFBasicProjectile::OnHit(UPrimitiveComponent * HitComponent, AActor * Oth
 	if (PushedCharacter)
 	{
 		FVector PushVelocity(0.0f, PushForceApplied, 0.f);
-		PushedCharacter->LaunchCharacter(PushVelocity, true, false);
+		PushedCharacter->LaunchCharacter(FVector::ZeroVector, true, false);
+		PushedCharacter->LaunchCharacter(PushVelocity, false, false);
 	}
 	Destroy();
 }

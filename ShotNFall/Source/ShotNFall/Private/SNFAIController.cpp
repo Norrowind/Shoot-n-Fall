@@ -47,7 +47,7 @@ ASNFAIController::ASNFAIController()
 	JumpTime = 0.08f;
 	SlideAcceleration = 500.f;
 	bIsStunned = false;
-	bIsAgressive = true;
+
 
 }
 
@@ -71,8 +71,6 @@ void ASNFAIController::Possess(APawn * InPawn)
 	if (CharacterPool.Num() != 0)
 	{
 		SearchForEnemies();
-		TargetToMoveTo = EnemyCharacter;
-
 	}
 
 	//Bounding delegate function to handle projectile hitting
@@ -129,10 +127,6 @@ void ASNFAIController::SearchForEnemies()
 		{
 			//...if other characters exist on the level - get the nearest one and set enemy 
 			EnemyCharacter = GetNearestEnemy(GameMode->GetCharacterPool());
-			if (bIsAgressive)
-			{
-				TargetToMoveTo = EnemyCharacter;
-			}
 		}
 	}
 }
@@ -180,22 +174,10 @@ void ASNFAIController::Tick(float DeltaTime)
 
 	if (!AICharacter) { return; }
 
-	if (bIsAgressive)
-	{
 		if (EnemyCharacter)
 		{
 			ChaseAndShoot(EnemyCharacter);
 		}
-
-	}
-	else
-	{
-		if (TargetToMoveTo)
-		{
-			MoveToTarget(TargetToMoveTo);
-		}
-	}
-
 
 }
 
@@ -319,10 +301,10 @@ void ASNFAIController::NotifyBullets(const TArray<AActor*>& Bullets)
 				AActor* DistractingActor = Bullet->GetOwner();
 				if (DistractingActor != AICharacter)
 				{
-					if (DistractingActor && AICharacter && TargetToMoveTo)
+					if (DistractingActor && AICharacter && EnemyCharacter)
 					{
 						float DistanceToDistractingActor = (DistractingActor->GetActorLocation() - AICharacter->GetActorLocation()).Size();
-						float DistanceToCurrentTarget = (TargetToMoveTo->GetActorLocation() - AICharacter->GetActorLocation()).Size();
+						float DistanceToCurrentTarget = (EnemyCharacter->GetActorLocation() - AICharacter->GetActorLocation()).Size();
 						if (DistanceToDistractingActor < DistanceToCurrentTarget)
 						{
 							EnemyCharacter = Cast<AShotNFallCharacter>(DistractingActor);
@@ -366,9 +348,8 @@ void ASNFAIController::MoveToTarget(AActor * Target)
 					IntermidiatePathPoint = Target;
 					MoveToActor(Target, DistanceToMoveToTarget);
 				}
-
-				//use custom pathfinding logic 
 				else
+				//use custom pathfinding logic 
 				{
 					FindPath(PathPoints, StartPointActor, EndPointActor, CurrentPathPointIndex);
 					if (PathPoints.IsValidIndex(CurrentPathPointIndex))

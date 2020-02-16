@@ -9,6 +9,7 @@
 #include "Public/SNFAIController.h"
 #include "TimerManager.h"
 #include "Public/CustomNavigationData.h"
+#include "NavigationSystem/Public/NavigationSystem.h"
 
 AShotNFallGameMode::AShotNFallGameMode()
 {
@@ -40,6 +41,8 @@ void AShotNFallGameMode::BeginPlay()
 	Platforms.Add(Builder);
 
 	ACustomNavigationData::BuildNavigationGraphNodesData(Platforms);
+	
+	UNavigationSystemV1::GetNavigationSystem(GetWorld())->Build();
 
 	//Spawn characters and possess controllers
 	for(int32 i = 0; i < NumberOfBots + 1; i++)
